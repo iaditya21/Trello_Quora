@@ -19,7 +19,7 @@ public class RestExceptionHandler {
     }
 
     @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<ErrorResponse> UserNotFoundException(AuthorizationFailedException exe, WebRequest request){
+    public ResponseEntity<ErrorResponse> UserNotFoundException(UserNotFoundException exe, WebRequest request){
         return new ResponseEntity<ErrorResponse>(
                 new ErrorResponse().code(exe.getCode()).message(exe.getErrorMessage()), HttpStatus.NOT_FOUND
         );
