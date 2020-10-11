@@ -6,6 +6,7 @@ import com.upgrad.quora.service.entity.QuestionEntity;
 import com.upgrad.quora.service.entity.UserAuthTokenEntity;
 import com.upgrad.quora.service.entity.UserEntity;
 import com.upgrad.quora.service.exception.AuthorizationFailedException;
+import com.upgrad.quora.service.exception.InvalidQuestionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -89,9 +90,13 @@ public class QuestionService {
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public void deleteQuestion(String questionUUId,String authToken) throws AuthorizationFailedException {
+    public void deleteQuestion(String questionUUId,String authToken) throws AuthorizationFailedException, InvalidQuestionException {
         UserAuthTokenEntity authTokenEntity= userDao.getAuthToken(authToken);
         QuestionEntity question=questionDao.getQuestion(questionUUId);
+
+        if(question==null){
+            throw new InvalidQuestionException("QUES-001","Entered question uuid does not exist");
+        }
         //Checks if authToken is valid or not.
         if(authTokenEntity==null){
             throw new AuthorizationFailedException("ATHR-001","User has not signed in.");
