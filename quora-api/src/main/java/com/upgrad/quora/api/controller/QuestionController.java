@@ -4,6 +4,7 @@ import com.upgrad.quora.api.model.*;
 import com.upgrad.quora.service.business.QuestionService;
 import com.upgrad.quora.service.entity.QuestionEntity;
 import com.upgrad.quora.service.exception.AuthorizationFailedException;
+import com.upgrad.quora.service.exception.InvalidQuestionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -69,7 +70,7 @@ public class QuestionController {
 
     @RequestMapping(method = RequestMethod.DELETE,path="/question/delete/{questionId}",produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<QuestionDeleteResponse> deleteQuestion (@PathVariable("questionId") final String questionId,
-                                                                           @RequestHeader ("authorization") final String authToken) throws AuthorizationFailedException {
+                                                                           @RequestHeader ("authorization") final String authToken) throws AuthorizationFailedException, InvalidQuestionException {
 
         questionService.deleteQuestion(questionId,authToken);
         QuestionDeleteResponse response=new QuestionDeleteResponse();
