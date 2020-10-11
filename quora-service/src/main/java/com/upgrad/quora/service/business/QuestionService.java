@@ -4,7 +4,6 @@ import com.upgrad.quora.service.dao.QuestionDao;
 import com.upgrad.quora.service.dao.UserDao;
 import com.upgrad.quora.service.entity.QuestionEntity;
 import com.upgrad.quora.service.entity.UserAuthTokenEntity;
-import com.upgrad.quora.service.entity.UserEntity;
 import com.upgrad.quora.service.exception.AuthorizationFailedException;
 import com.upgrad.quora.service.exception.InvalidQuestionException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +46,7 @@ public class QuestionService {
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public List<QuestionEntity> getAllQuestion(String authToken) throws AuthorizationFailedException {
+    public List<QuestionEntity> getAllQuestion(String authToken,String userId) throws AuthorizationFailedException {
         UserAuthTokenEntity authTokenEntity= userDao.getAuthToken(authToken);
         //Checks if authToken is valid or not.
         if(authTokenEntity==null){
@@ -61,8 +60,8 @@ public class QuestionService {
                 throw new AuthorizationFailedException("ATHR-002", "User is signed out.Sign in first to get user details");
             }
         }
-        UserEntity user=authTokenEntity.getUser();
-        return questionDao.getAllQuestions(user);
+
+        return questionDao.getAllQuestions(userDao.getUser(userId));
     }
 
     @Transactional(propagation = Propagation.REQUIRED)

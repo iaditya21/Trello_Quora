@@ -35,8 +35,8 @@ public class QuestionDao {
         return question;
     }
 
-    public List<QuestionEntity> getAllQuestions (UserEntity userEntity){
-        List<QuestionEntity> questions=entityManager.createNamedQuery("questionsByUser",QuestionEntity.class).setParameter("userId",userEntity)
+    public List<QuestionEntity> getAllQuestions (UserEntity userId){
+        List<QuestionEntity> questions=entityManager.createNamedQuery("questionsByUser",QuestionEntity.class).setParameter("userId",userId)
                 .getResultList();
         return questions;
     }

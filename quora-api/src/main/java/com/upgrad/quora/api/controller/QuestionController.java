@@ -42,9 +42,10 @@ public class QuestionController {
         return new ResponseEntity<QuestionResponse>(response,HttpStatus.CREATED);
     }
 
-    @RequestMapping(method = RequestMethod.GET,path="/question/all",produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<List<QuestionDetailsResponse>> createQuestion (@RequestHeader ("authorization") final String authToken) throws AuthorizationFailedException {
-        List<QuestionEntity> allQuestions=questionService.getAllQuestion(authToken);
+    @RequestMapping(method = RequestMethod.GET,path="/question/all/{userId}",produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<List<QuestionDetailsResponse>> getAllQuestions (@RequestHeader ("authorization") final String authToken
+                    ,@PathVariable("userId") final String userId) throws AuthorizationFailedException {
+        List<QuestionEntity> allQuestions=questionService.getAllQuestion(authToken,userId);
         List<QuestionDetailsResponse> responses=new ArrayList<>();
         for (QuestionEntity question:allQuestions) {
             QuestionDetailsResponse response=new QuestionDetailsResponse();
@@ -58,7 +59,7 @@ public class QuestionController {
 
     @RequestMapping(method = RequestMethod.PUT,path="/question/edit/{questionId}",produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
             consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<QuestionResponse> createQuestion (@PathVariable("questionId") final String questionId, QuestionEditRequest request,
+    public ResponseEntity<QuestionResponse> editQuestion (@PathVariable("questionId") final String questionId, QuestionEditRequest request,
             @RequestHeader ("authorization") final String authToken) throws AuthorizationFailedException {
 
         QuestionEntity editedValue=questionService.editQuestion(questionId,authToken,request.getContent());
