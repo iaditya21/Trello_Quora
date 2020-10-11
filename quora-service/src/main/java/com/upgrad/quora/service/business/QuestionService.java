@@ -88,4 +88,30 @@ public class QuestionService {
         return questionDao.updateQuestion(question);
     }
 
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void deleteQuestion(String questionUUId,String authToken) throws AuthorizationFailedException {
+        UserAuthTokenEntity authTokenEntity= userDao.getAuthToken(authToken);
+        QuestionEntity question=questionDao.getQuestion(questionUUId);
+        //Checks if authToken is valid or not.
+        if(authTokenEntity==null){
+            throw new AuthorizationFailedException("ATHR-001","User has not signed in.");
+        }
+        if(authTokenEntity.getLogoutAt()!=null) {
+            LocalDateTime logoutTime = authTokenEntity.getLogoutAt().toLocalDateTime();
+            LocalDateTime currentTime = LocalDateTime.now();
+            //Checks  logged out time to determine if user is currently signed in or not.
+            if (logoutTime.isBefore(currentTime)) {
+                throw new AuthorizationFailedException("ATHR-002", "User is signed out.Sign in first to get user details");
+            }
+        }
+
+        if(authTokenEntity.getUser()!=question.getUserId()) {
+            if (!(authTokenEntity.getUser().getRole().equalsIgnoreCase("admin"))) {
+                throw new AuthorizationFailedException("ATHR-003", "Only the question owner or admin can delete the question");
+            }
+        }
+
+        questionDao.deleteQuestion(questionDao.getQuestion(questionUUId));
+    }
+
 }

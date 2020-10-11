@@ -35,4 +35,15 @@ public class QuestionDao {
                 .getResultList();
         return questions;
     }
+
+    public void deleteQuestion(QuestionEntity question){
+        try {
+            entityManager.remove(question);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+
+    }
+
 }

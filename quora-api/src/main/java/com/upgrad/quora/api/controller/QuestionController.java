@@ -1,9 +1,6 @@
 package com.upgrad.quora.api.controller;
 
-import com.upgrad.quora.api.model.QuestionDetailsResponse;
-import com.upgrad.quora.api.model.QuestionEditRequest;
-import com.upgrad.quora.api.model.QuestionRequest;
-import com.upgrad.quora.api.model.QuestionResponse;
+import com.upgrad.quora.api.model.*;
 import com.upgrad.quora.service.business.QuestionService;
 import com.upgrad.quora.service.entity.QuestionEntity;
 import com.upgrad.quora.service.exception.AuthorizationFailedException;
@@ -68,6 +65,17 @@ public class QuestionController {
         response.status("QUESTION EDITED");
         response.id(editedValue.getUuid());
         return new ResponseEntity<QuestionResponse>(response,HttpStatus.OK);
+    }
+
+    @RequestMapping(method = RequestMethod.DELETE,path="/question/delete/{questionId}",produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<QuestionDeleteResponse> deleteQuestion (@PathVariable("questionId") final String questionId,
+                                                                           @RequestHeader ("authorization") final String authToken) throws AuthorizationFailedException {
+
+        questionService.deleteQuestion(questionId,authToken);
+        QuestionDeleteResponse response=new QuestionDeleteResponse();
+        response.status("QUESTION DELETED");
+        response.id(questionId);
+        return new ResponseEntity<QuestionDeleteResponse>(response,HttpStatus.OK);
     }
 
 }
