@@ -8,6 +8,12 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "question", schema = "public")
+@NamedQueries(
+        {
+                @NamedQuery(name = "questionsByUser", query = "select q from QuestionEntity q where q.userId = :userId"),
+
+        }
+)
 public class QuestionEntity implements Serializable {
     @Id
     @Column(name = "ID")

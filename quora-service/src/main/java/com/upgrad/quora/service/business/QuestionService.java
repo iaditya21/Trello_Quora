@@ -4,6 +4,7 @@ import com.upgrad.quora.service.dao.QuestionDao;
 import com.upgrad.quora.service.dao.UserDao;
 import com.upgrad.quora.service.entity.QuestionEntity;
 import com.upgrad.quora.service.entity.UserAuthTokenEntity;
+import com.upgrad.quora.service.entity.UserEntity;
 import com.upgrad.quora.service.exception.AuthorizationFailedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Service
@@ -21,9 +23,6 @@ public class QuestionService {
 
     @Autowired
     private UserDao userDao;
-
-    @Autowired
-    private  PasswordCryptographyProvider passwordCryptographyProvider;
 
 
     @Transactional(propagation = Propagation.REQUIRED)
@@ -44,6 +43,17 @@ public class QuestionService {
            }
        }
        return questionDao.createQuestion(question);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    public List<QuestionEntity> getAllQuestion(String authToken) throws AuthorizationFailedException {
+        UserAuthTokenEntity authTokenEntity= userDao.getAuthToken(authToken);
+        //Checks if authToken is valid or not.
+        if(authTokenEntity==null){
+            throw new AuthorizationFailedException("ATHR-001","User has not signed in.");
+        }
+        UserEntity user=authTokenEntity.getUser();
+        return questionDao.getAllQuestions(user);
     }
 
 }
