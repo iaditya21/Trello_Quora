@@ -19,6 +19,17 @@ public class QuestionDao {
        return newQuestion;
     }
 
+    public QuestionEntity updateQuestion(QuestionEntity newQuestion){
+        entityManager.merge(newQuestion);
+        return newQuestion;
+    }
+
+    public QuestionEntity getQuestion(String questionUUId){
+        QuestionEntity question=entityManager.createNamedQuery("questionByUUId",QuestionEntity.class).setParameter("uuid",questionUUId)
+                .getSingleResult();
+        return question;
+    }
+
     public List<QuestionEntity> getAllQuestions (UserEntity userEntity){
         List<QuestionEntity> questions=entityManager.createNamedQuery("questionsByUser",QuestionEntity.class).setParameter("userId",userEntity)
                 .getResultList();

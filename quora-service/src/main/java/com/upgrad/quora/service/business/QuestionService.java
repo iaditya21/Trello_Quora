@@ -64,4 +64,28 @@ public class QuestionService {
         return questionDao.getAllQuestions(user);
     }
 
+    @Transactional(propagation = Propagation.REQUIRED)
+    public QuestionEntity editQuestion(String questionUUId,String authToken,String content) throws AuthorizationFailedException {
+        UserAuthTokenEntity authTokenEntity= userDao.getAuthToken(authToken);
+        QuestionEntity question=questionDao.getQuestion(questionUUId);
+        //Checks if authToken is valid or not.
+        if(authTokenEntity==null){
+            throw new AuthorizationFailedException("ATHR-001","User has not signed in.");
+        }
+        if(authTokenEntity.getLogoutAt()!=null) {
+            LocalDateTime logoutTime = authTokenEntity.getLogoutAt().toLocalDateTime();
+            LocalDateTime currentTime = LocalDateTime.now();
+            //Checks  logged out time to determine if user is currently signed in or not.
+            if (logoutTime.isBefore(currentTime)) {
+                throw new AuthorizationFailedException("ATHR-002", "User is signed out.Sign in first to get user details");
+            }
+        }
+
+        if(authTokenEntity.getUser()!=question.getUserId()){
+            throw new AuthorizationFailedException("ATHR-003", "Only the question owner can edit the question");
+        }
+        question.setContent(content);
+        return questionDao.updateQuestion(question);
+    }
+
 }
