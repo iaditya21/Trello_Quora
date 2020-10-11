@@ -11,7 +11,8 @@ import java.util.Objects;
 @NamedQueries(
         {
                 @NamedQuery(name = "questionsByUser", query = "select q from QuestionEntity q where q.userId = :userId"),
-                @NamedQuery(name = "questionByUUId", query = "select q from QuestionEntity q where q.uuid = :uuid")
+                @NamedQuery(name = "questionByUUId", query = "select q from QuestionEntity q where q.uuid = :uuid"),
+                @NamedQuery(name = "questionsByEveryUser", query = "select q from QuestionEntity q ")
         }
 )
 public class QuestionEntity implements Serializable {

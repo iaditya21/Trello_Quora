@@ -57,6 +57,19 @@ public class QuestionController {
         return new ResponseEntity<List<QuestionDetailsResponse>>(responses,HttpStatus.OK);
     }
 
+    @RequestMapping(method = RequestMethod.GET,path="/question/all",produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<List<QuestionDetailsResponse>> getEveryQuestions (@RequestHeader ("authorization") final String authToken) throws AuthorizationFailedException {
+        List<QuestionEntity> allQuestions=questionService.getAllQuestion(authToken);
+        List<QuestionDetailsResponse> responses=new ArrayList<>();
+        for (QuestionEntity question:allQuestions) {
+            QuestionDetailsResponse response=new QuestionDetailsResponse();
+            response.content(question.getContent());
+            response.id(question.getUuid());
+            responses.add(response);
+        }
+        return new ResponseEntity<List<QuestionDetailsResponse>>(responses,HttpStatus.OK);
+    }
+
 
     @RequestMapping(method = RequestMethod.PUT,path="/question/edit/{questionId}",produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
             consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)

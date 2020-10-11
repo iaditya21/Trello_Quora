@@ -41,6 +41,12 @@ public class QuestionDao {
         return questions;
     }
 
+    public List<QuestionEntity> getAllQuestions (){
+        List<QuestionEntity> questions=entityManager.createNamedQuery("questionsByEveryUser",QuestionEntity.class)
+                .getResultList();
+        return questions;
+    }
+
     public void deleteQuestion(QuestionEntity question){
         try {
             entityManager.remove(question);

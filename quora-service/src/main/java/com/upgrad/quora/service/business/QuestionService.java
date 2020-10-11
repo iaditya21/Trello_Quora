@@ -71,6 +71,27 @@ public class QuestionService {
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
+    public List<QuestionEntity> getAllQuestion(String authToken) throws AuthorizationFailedException {
+        UserAuthTokenEntity authTokenEntity= userDao.getAuthToken(authToken);
+        //Checks if authToken is valid or not.
+        if(authTokenEntity==null){
+            throw new AuthorizationFailedException("ATHR-001","User has not signed in.");
+        }
+        if(authTokenEntity.getLogoutAt()!=null) {
+            LocalDateTime logoutTime = authTokenEntity.getLogoutAt().toLocalDateTime();
+            LocalDateTime currentTime = LocalDateTime.now();
+            //Checks  logged out time to determine if user is currently signed in or not.
+            if (logoutTime.isBefore(currentTime)) {
+                throw new AuthorizationFailedException("ATHR-002", "User is signed out.Sign in first to get user details");
+            }
+        }
+
+
+
+        return questionDao.getAllQuestions();
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
     public QuestionEntity editQuestion(String questionUUId,String authToken,String content) throws AuthorizationFailedException {
         UserAuthTokenEntity authTokenEntity= userDao.getAuthToken(authToken);
         QuestionEntity question=questionDao.getQuestion(questionUUId);
