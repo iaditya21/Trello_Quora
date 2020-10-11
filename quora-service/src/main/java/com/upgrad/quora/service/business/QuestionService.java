@@ -33,15 +33,16 @@ public class QuestionService {
        if(authTokenEntity==null){
             throw new AuthorizationFailedException("ATHR-001","User has not signed in.");
        }
+        question.setUserId(authTokenEntity.getUser());
 
-        LocalDateTime logoutTime=authTokenEntity.getLogoutAt().toLocalDateTime();
-        LocalDateTime currentTime=LocalDateTime.now();
-        //Checks  logged out time to determine if user is currently signed in or not.
-       if(logoutTime.isBefore(currentTime))
-       {
-           throw new AuthorizationFailedException("ATHR-002","User is signed out.Sign in first to get user details");
+       if(authTokenEntity.getLogoutAt()!=null) {
+           LocalDateTime logoutTime = authTokenEntity.getLogoutAt().toLocalDateTime();
+           LocalDateTime currentTime = LocalDateTime.now();
+           //Checks  logged out time to determine if user is currently signed in or not.
+           if (logoutTime.isBefore(currentTime)) {
+               throw new AuthorizationFailedException("ATHR-002", "User is signed out.Sign in first to get user details");
+           }
        }
-
        return questionDao.createQuestion(question);
     }
 
