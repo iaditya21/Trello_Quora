@@ -38,7 +38,7 @@ public class CommonController {
         UserEntity userEntity=userService.getUser(userId,authToken);
         UserDetailsResponse userDetailsResponse=new UserDetailsResponse().firstName(userEntity.getFirstName()).lastName(userEntity.getLastName())
                                                     .emailAddress(userEntity.getEmail()).userName((userEntity.getUsername()))
-                                                    .country(userEntity.getCountry()).aboutMe(userEntity.getAboutMe()).dob(userEntity.getAboutMe())
+                                                    .country(userEntity.getCountry()).aboutMe(userEntity.getAboutme()).dob(userEntity.getAboutme())
                                                     .contactNumber(userEntity.getContactNumber());
         return new ResponseEntity<UserDetailsResponse>(userDetailsResponse, HttpStatus.OK);
     }

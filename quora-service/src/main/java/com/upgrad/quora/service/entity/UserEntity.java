@@ -194,11 +194,11 @@ public class UserEntity implements Serializable {
     }
 
     public String getContactNumber() {
-        return contactNumber;
+        return contactnumber;
     }
 
     public void setContactNumber(String contactNumber) {
-        this.contactNumber = contactNumber;
+        this.contactnumber = contactNumber;
     }
 
     @Override
