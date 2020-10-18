@@ -12,9 +12,10 @@ import java.io.Serializable;
 import java.time.ZonedDateTime;
 
 @Entity
-@Table(name = "user_auth")
+
+@Table(name = "user_auth", schema = "public")
 @NamedQueries({
-        @NamedQuery(name = "userAuthTokenByAccessToken", query = "select ut from UserAuthEntity ut where ut.accessToken = :accessToken ")
+        @NamedQuery(name = "userAuthTokenByAccessToken" , query = "select ut from UserAuthEntity ut where ut.accessToken = :accessToken ")
 })
 public class UserAuthEntity implements Serializable {
 
@@ -26,6 +27,7 @@ public class UserAuthEntity implements Serializable {
 
     @Column(name = "UUID")
     @NotNull
+    @Size(max = 64)
     private String uuid;
 
     @ManyToOne
@@ -47,6 +49,16 @@ public class UserAuthEntity implements Serializable {
 
     @Column(name = "LOGOUT_AT")
     private ZonedDateTime logoutAt;
+
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
 
     public Integer getId() {
         return id;
@@ -96,13 +108,6 @@ public class UserAuthEntity implements Serializable {
         this.logoutAt = logoutAt;
     }
 
-    public String getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
-    }
 
     @Override
     public boolean equals(Object obj) {

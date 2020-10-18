@@ -1,6 +1,8 @@
 package com.upgrad.quora.service.entity;
 
+
 import org.apache.commons.lang3.builder.EqualsBuilder;
+
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -11,13 +13,16 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "users")
+
+@Table(name = "users", schema = "public")
 @NamedQueries(
         {
                 @NamedQuery(name = "userByUuid", query = "select u from UserEntity u where u.uuid = :uuid"),
-                @NamedQuery(name = "userByEmail", query = "select u from UserEntity u where u.email =:email"),
+                @NamedQuery(name = "userByEmail", query = "select u from UserEntity u where u.email =:email")
+
         }
 )
+
 
 
 public class UserEntity implements Serializable {
@@ -31,14 +36,6 @@ public class UserEntity implements Serializable {
     @Size(max = 64)
     private String uuid;
 
-    @Column(name = "EMAIL")
-    @NotNull
-    @Size(max = 200)
-    private String email;
-
-    //@ToStringExclude
-    @Column(name = "PASSWORD")
-    private String password;
 
     @Column(name = "FIRSTNAME")
     @NotNull
@@ -49,6 +46,20 @@ public class UserEntity implements Serializable {
     @NotNull
     @Size(max = 200)
     private String lastName;
+
+    @Column(name = "USERNAME")
+    @NotNull
+    @Size(max = 200)
+    private String username;
+
+    @Column(name = "EMAIL")
+    @NotNull
+    @Size(max = 200)
+    private String email;
+
+    @Column(name = "PASSWORD")
+    private String password;
+
 
     @Column(name = "SALT")
     @NotNull
@@ -79,6 +90,8 @@ public class UserEntity implements Serializable {
         return new EqualsBuilder().append(this, obj).isEquals();
     }
 
+    
+
     public Integer getId() {
         return id;
     }
@@ -95,20 +108,30 @@ public class UserEntity implements Serializable {
         this.uuid = uuid;
     }
 
-    public String getRole() {
-        return role;
+
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public String getContactnumber() {
-        return contactnumber;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setContactnumber(String contactnumber) {
-        this.contactnumber = contactnumber;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+
     }
 
     public String getEmail() {
@@ -127,21 +150,6 @@ public class UserEntity implements Serializable {
         this.password = password;
     }
 
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
 
     public String getSalt() {
         return salt;
@@ -159,6 +167,7 @@ public class UserEntity implements Serializable {
         this.country = country;
     }
 
+
     public String getAboutme() {
         return aboutme;
     }
@@ -173,6 +182,23 @@ public class UserEntity implements Serializable {
 
     public void setDob(String dob) {
         this.dob = dob;
+    }
+
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public String getContactNumber() {
+        return contactNumber;
+    }
+
+    public void setContactNumber(String contactNumber) {
+        this.contactNumber = contactNumber;
     }
 
     @Override
