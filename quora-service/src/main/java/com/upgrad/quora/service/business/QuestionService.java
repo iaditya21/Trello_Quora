@@ -3,7 +3,7 @@ package com.upgrad.quora.service.business;
 import com.upgrad.quora.service.dao.QuestionDao;
 import com.upgrad.quora.service.dao.UserDao;
 import com.upgrad.quora.service.entity.QuestionEntity;
-import com.upgrad.quora.service.entity.UserAuthTokenEntity;
+import com.upgrad.quora.service.entity.UserAuthEntity;
 import com.upgrad.quora.service.entity.UserEntity;
 import com.upgrad.quora.service.exception.AuthorizationFailedException;
 import com.upgrad.quora.service.exception.InvalidQuestionException;
@@ -29,7 +29,7 @@ public class QuestionService {
 
     @Transactional(propagation = Propagation.REQUIRED)
     public QuestionEntity createQuestion(QuestionEntity question, String authToken) throws AuthorizationFailedException {
-       UserAuthTokenEntity authTokenEntity= userDao.getAuthToken(authToken);
+       UserAuthEntity authTokenEntity= userDao.getAuthToken(authToken);
        //Checks if authToken is valid or not.
        if(authTokenEntity==null){
             throw new AuthorizationFailedException("ATHR-001","User has not signed in.");
@@ -49,7 +49,7 @@ public class QuestionService {
 
     @Transactional(propagation = Propagation.REQUIRED)
     public List<QuestionEntity> getAllQuestion(String authToken,String userId) throws AuthorizationFailedException, UserNotFoundException {
-        UserAuthTokenEntity authTokenEntity= userDao.getAuthToken(authToken);
+        UserAuthEntity authTokenEntity= userDao.getAuthToken(authToken);
         //Checks if authToken is valid or not.
         if(authTokenEntity==null){
             throw new AuthorizationFailedException("ATHR-001","User has not signed in.");
@@ -72,7 +72,7 @@ public class QuestionService {
 
     @Transactional(propagation = Propagation.REQUIRED)
     public List<QuestionEntity> getAllQuestion(String authToken) throws AuthorizationFailedException {
-        UserAuthTokenEntity authTokenEntity= userDao.getAuthToken(authToken);
+        UserAuthEntity authTokenEntity= userDao.getAuthToken(authToken);
         //Checks if authToken is valid or not.
         if(authTokenEntity==null){
             throw new AuthorizationFailedException("ATHR-001","User has not signed in.");
@@ -93,7 +93,7 @@ public class QuestionService {
 
     @Transactional(propagation = Propagation.REQUIRED)
     public QuestionEntity editQuestion(String questionUUId,String authToken,String content) throws AuthorizationFailedException {
-        UserAuthTokenEntity authTokenEntity= userDao.getAuthToken(authToken);
+        UserAuthEntity authTokenEntity= userDao.getAuthToken(authToken);
         QuestionEntity question=questionDao.getQuestion(questionUUId);
         //Checks if authToken is valid or not.
         if(authTokenEntity==null){
@@ -117,7 +117,7 @@ public class QuestionService {
 
     @Transactional(propagation = Propagation.REQUIRED)
     public void deleteQuestion(String questionUUId,String authToken) throws AuthorizationFailedException, InvalidQuestionException {
-        UserAuthTokenEntity authTokenEntity= userDao.getAuthToken(authToken);
+        UserAuthEntity authTokenEntity= userDao.getAuthToken(authToken);
         QuestionEntity question=questionDao.getQuestion(questionUUId);
 
         if(question==null){

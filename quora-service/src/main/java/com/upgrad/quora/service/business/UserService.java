@@ -1,7 +1,7 @@
 package com.upgrad.quora.service.business;
 
 import com.upgrad.quora.service.dao.UserDao;
-import com.upgrad.quora.service.entity.UserAuthTokenEntity;
+import com.upgrad.quora.service.entity.UserAuthEntity;
 import com.upgrad.quora.service.entity.UserEntity;
 import com.upgrad.quora.service.exception.AuthorizationFailedException;
 import com.upgrad.quora.service.exception.UserNotFoundException;
@@ -36,7 +36,7 @@ public class UserService {
      * */
     @Transactional(propagation = Propagation.REQUIRED)
     public UserEntity getUser(String uuid,String authToken) throws AuthorizationFailedException, UserNotFoundException {
-       UserAuthTokenEntity authTokenEntity= userDao.getAuthToken(authToken);
+       UserAuthEntity authTokenEntity= userDao.getAuthToken(authToken);
        //Checks if authToken is valid or not.
        if(authTokenEntity==null){
             throw new AuthorizationFailedException("ATHR-001","User has not signed in.");
