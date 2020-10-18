@@ -13,14 +13,14 @@ import org.springframework.web.context.request.WebRequest;
 @ControllerAdvice
 public class RestExceptionHandler {
     @ExceptionHandler(AuthorizationFailedException.class)
-    public ResponseEntity<ErrorResponse> UnauthorizedException(AuthorizationFailedException exe, WebRequest request){
+    public ResponseEntity<ErrorResponse> authorizationFailedException(AuthorizationFailedException exe, WebRequest request){
         return new ResponseEntity<ErrorResponse>(
                 new ErrorResponse().code(exe.getCode()).message(exe.getErrorMessage()), HttpStatus.NOT_FOUND
         );
     }
 
     @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<ErrorResponse> UserNotFoundException(UserNotFoundException exe, WebRequest request){
+    public ResponseEntity<ErrorResponse> userNotFoundException(UserNotFoundException exe, WebRequest request){
         return new ResponseEntity<ErrorResponse>(
                 new ErrorResponse().code(exe.getCode()).message(exe.getErrorMessage()), HttpStatus.NOT_FOUND
         );
