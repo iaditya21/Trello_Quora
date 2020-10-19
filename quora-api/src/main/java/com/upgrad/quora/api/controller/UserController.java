@@ -4,6 +4,7 @@ import com.upgrad.quora.api.model.SigninResponse;
 import com.upgrad.quora.api.model.SignoutResponse;
 import com.upgrad.quora.api.model.SignupUserRequest;
 import com.upgrad.quora.api.model.SignupUserResponse;
+import com.upgrad.quora.service.business.UserService;
 import com.upgrad.quora.service.entity.UserAuthEntity;
 import com.upgrad.quora.service.entity.UserEntity;
 import com.upgrad.quora.service.exception.AuthenticationFailedException;
@@ -20,19 +21,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Base64;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/")
 public class UserController {
 
     @Autowired
-    private SignupBusinessService signupBusinessService;
+    private UserService userService;
 
-    @Autowired
-    private SigninBusinessService signinBusinessService;
-
-    @Autowired
-    private SignoutBusinessService signoutBusinessService;
 
     @RequestMapping(method= RequestMethod.POST, path="/user/signup", consumes= MediaType.APPLICATION_JSON_UTF8_VALUE, produces=MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<SignupUserResponse> signup(final SignupUserRequest signupUserRequest) throws SignUpRestrictedException {
@@ -50,7 +47,7 @@ public class UserController {
         userEntity.setRole("nonadmin"); //Role for new users is nonadmin by default
         userEntity.setContactNumber(signupUserRequest.getContactNumber());
 
-        final UserEntity createdUserEntity = signupBusinessService.signup(userEntity);
+        final UserEntity createdUserEntity = userService.signup(userEntity);
         SignupUserResponse userResponse = new SignupUserResponse().id(createdUserEntity.getUuid()).status("USER SUCCESSFULLY REGISTERED");
         return new ResponseEntity<SignupUserResponse>(userResponse,HttpStatus.CREATED);
     }
@@ -65,7 +62,7 @@ public class UserController {
         String decodedText = new String(decode);
         String[] decodedArray = decodedText.split(":");
 
-        UserAuthEntity userAuthToken = signinBusinessService.signin(decodedArray[0],decodedArray[1]);
+        UserAuthEntity userAuthToken = userService.signin(decodedArray[0],decodedArray[1]);
         UserEntity user = userAuthToken.getUser();
 
         //Signin response will be the response body for a successful signin request
@@ -83,7 +80,7 @@ public class UserController {
         //Split the authorization header based on "Bearer " prefix to extract only the JWT token required for service class
         //If authorization header doesn't contain "Bearer " prefix then pass it as it is since it will be from test cases
         String authToken = authorization.startsWith("Bearer ")? authorization.split("Bearer ")[1]: authorization;
-        UserEntity user = signoutBusinessService.signout(authToken);
+        UserEntity user = userService.signout(authToken);
 
         SignoutResponse signoutResponse = new SignoutResponse().id(user.getUuid()).message("SIGNED OUT SUCCESSFULLY");
         return new ResponseEntity<SignoutResponse>(signoutResponse, HttpStatus.OK);
