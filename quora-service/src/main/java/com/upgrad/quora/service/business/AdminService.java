@@ -23,14 +23,14 @@ public class AdminService {
         if (userAuthEntity == null) {
             throw new AuthorizationFailedException("ATHR-001", "User has not signed in");
         }
-        if(ZonedDateTime.now().isAfter(userAuthEntity.getExpiresAt())){
-            throw new AuthorizationFailedException("ATHR-003", "User is signed out");
+        if (user == null) {
+            throw new UserNotFoundException("USR-001", "User with entered uuid to be deleted does not exist");
         }
         if(user.getRole().equals(ServiceConstant.NON_ADMIN)){
             throw new AuthorizationFailedException("ATHR-003", "Unauthorized Access, Entered user is not an admin");
         }
-        if (user == null) {
-            throw new UserNotFoundException("USR-001", "User with entered uuid to be deleted does not exist");
+        if(ZonedDateTime.now().isAfter(userAuthEntity.getExpiresAt())){
+            throw new AuthorizationFailedException("ATHR-003", "User is signed out");
         }
         userDao.userDelete(user);
     }

@@ -92,7 +92,7 @@ public class QuestionService {
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
-    public QuestionEntity editQuestion(String questionUUId,String authToken,String content) throws AuthorizationFailedException {
+    public QuestionEntity editQuestion(String questionUUId,String authToken,String content) throws AuthorizationFailedException, InvalidQuestionException {
         UserAuthEntity authTokenEntity= userDao.getAuthToken(authToken);
         QuestionEntity question=questionDao.getQuestion(questionUUId);
         //Checks if authToken is valid or not.
@@ -106,6 +106,10 @@ public class QuestionService {
             if (logoutTime.isBefore(currentTime)) {
                 throw new AuthorizationFailedException("ATHR-002", "User is signed out.Sign in first to get user details");
             }
+        }
+
+        if(question==null){
+            throw new InvalidQuestionException("QUES-001","Entered question uuid does not exist");
         }
 
         if(authTokenEntity.getUser()!=question.getUserId()){
