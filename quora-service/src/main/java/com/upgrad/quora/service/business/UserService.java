@@ -23,45 +23,42 @@ public class UserService {
     @Autowired
     private PasswordCryptographyProvider cryptographyProvider;
 
+
     /**
      * Checks the user,if valid user is found then user details are returned
-     *
+     * <p>
      * Input:
-     *      uuid:
-     *          Type-String
-     *          Unique uuid to identify user
- *          authToken
-     *           Type-String
-     *           Unique authToken to identify a session
-     *
-     * */
+     * uuid:
+     * Type-String
+     * Unique uuid to identify user
+     * authToken
+     * Type-String
+     * Unique authToken to identify a session
+     */
     @Transactional(propagation = Propagation.REQUIRED)
-    public UserEntity getUser(String uuid,String authToken) throws AuthorizationFailedException, UserNotFoundException {
-       UserAuthEntity authTokenEntity= userDao.getAuthToken(authToken);
-       LocalDateTime currentTime=LocalDateTime.now();
-       LocalDateTime logoutTime=null;
-       //Checks if authToken is valid or not.
-       if(authTokenEntity==null){
-            throw new AuthorizationFailedException("ATHR-001","User has not signed in.");
-       }
-       UserEntity user= userDao.getUser(uuid);
-        //Checks if user is valid or not.
-       if(user==null){
-           throw new UserNotFoundException("USR-001","User with entered uuid does not exist");
-       }
 
-     if(authTokenEntity.getLogoutAt()!=null) {
-         logoutTime = authTokenEntity.getLogoutAt().toLocalDateTime();
-     }
-
-
-        //Checks  logged out time to determine if user is currently signed in or not.
-        if(logoutTime!=null) {
-            if (logoutTime.isBefore(currentTime)) {
-                throw new AuthorizationFailedException("ATHR-002", "User is signed out.Sign in first to get user details");
-            }
+    public UserEntity getUser(String uuid, String authToken) throws AuthorizationFailedException, UserNotFoundException {
+        UserAuthEntity authTokenEntity = userDao.getAuthToken(authToken);
+        //Checks if authToken is valid or not.
+        if (authTokenEntity == null) {
+            throw new AuthorizationFailedException("ATHR-001", "User has not signed in.");
         }
-       return user;
+        UserEntity user = userDao.getUser(uuid);
+        //Checks if user is valid or not.
+        if (user == null) {
+            throw new UserNotFoundException("USR-001", "User with entered uuid does not exist");
+        }
+        if (authTokenEntity.getLogoutAt() == null) {
+            return user;
+        }
+        LocalDateTime logoutTime = authTokenEntity.getLogoutAt().toLocalDateTime();
+        LocalDateTime currentTime = LocalDateTime.now();
+        //Checks  logged out time to determine if user is currently signed in or not.
+        if (logoutTime.isBefore(currentTime)) {
+            throw new AuthorizationFailedException("ATHR-002", "User is signed out.Sign in first to get user details");
+        }
+        return user;
+
     }
 
 
