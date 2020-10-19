@@ -74,7 +74,7 @@ public class QuestionController {
     @RequestMapping(method = RequestMethod.PUT,path="/question/edit/{questionId}",produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
             consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<QuestionResponse> editQuestion (@PathVariable("questionId") final String questionId, QuestionEditRequest request,
-            @RequestHeader ("authorization") final String authToken) throws AuthorizationFailedException {
+            @RequestHeader ("authorization") final String authToken) throws AuthorizationFailedException, InvalidQuestionException {
 
         QuestionEntity editedValue=questionService.editQuestion(questionId,authToken,request.getContent());
         QuestionResponse response=new QuestionResponse();
