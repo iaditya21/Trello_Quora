@@ -17,8 +17,8 @@ public class AdminService {
     @Autowired
     UserDao userDao;
 
-    public void userDelete(String uUid, String bearerToken) throws UserNotFoundException, AuthorizationFailedException {
-        UserAuthEntity userAuthEntity = userDao.getUserAuthToken(bearerToken);
+    public void userDelete(String uUid, String authorizationToken) throws UserNotFoundException, AuthorizationFailedException {
+        UserAuthEntity userAuthEntity = userDao.getAuthToken(authorizationToken);
         UserEntity user = userDao.getUser(uUid);
         if (userAuthEntity == null) {
             throw new AuthorizationFailedException("ATHR-001", "User has not signed in");
@@ -30,7 +30,9 @@ public class AdminService {
             throw new AuthorizationFailedException("ATHR-003", "Unauthorized Access, Entered user is not an admin");
         }
         if(ZonedDateTime.now().isAfter(userAuthEntity.getExpiresAt())){
-            throw new AuthorizationFailedException("ATHR-003", "User is signed out");
+            if(ZonedDateTime.now().isAfter(userAuthEntity.getLogoutAt())) {
+                throw new AuthorizationFailedException("ATHR-003", "User is signed out");
+            }
         }
         userDao.userDelete(user);
     }

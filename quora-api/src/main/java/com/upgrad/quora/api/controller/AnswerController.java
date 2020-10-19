@@ -106,7 +106,7 @@ public class AnswerController {
         QuestionEntity questionEntity = questionBusinessService.validateQuestion(questionId,true);
 
 
-        ArrayList<AnswerDetailsResponse> list = null;
+        ArrayList<AnswerDetailsResponse> list = new ArrayList<>();
         ArrayList<AnswerEntity> rawList = (ArrayList) answerBusinessService.getAllAnswers(questionId , userAuthEntity);
 
         for(AnswerEntity answer : rawList)
