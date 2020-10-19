@@ -2,7 +2,7 @@ package com.upgrad.quora.api.controller;
 import com.upgrad.quora.api.model.*;
 import com.upgrad.quora.service.business.AnswerBusinessService;
 import com.upgrad.quora.service.business.AuthorizationBusinessService;
-import com.upgrad.quora.service.business.QuestionBusinessService;
+import com.upgrad.quora.service.business.QuestionService;
 import com.upgrad.quora.service.entity.AnswerEntity;
 import com.upgrad.quora.service.entity.QuestionEntity;
 import com.upgrad.quora.service.entity.UserAuthEntity;
@@ -32,7 +32,7 @@ public class AnswerController {
     private AuthorizationBusinessService authorizationBusinessService;
 
     @Autowired
-    private QuestionBusinessService questionBusinessService;
+    private QuestionService questionBusinessService;
 
     @RequestMapping(method = RequestMethod.POST, path = "/question/{questionId}/answer/create", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<AnswerResponse> createAnswer(@RequestHeader("authorization") final String authorization, @PathVariable("questionId") final String questionId, final AnswerRequest answerRequest)
