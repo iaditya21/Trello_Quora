@@ -9,6 +9,7 @@ import com.upgrad.quora.service.exception.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 
 @Service
@@ -26,10 +27,17 @@ public class AdminService {
         if (user == null) {
             throw new UserNotFoundException("USR-001", "User with entered uuid to be deleted does not exist");
         }
-        if(user.getRole().equals(ServiceConstant.NON_ADMIN)){
+        if (user.getRole().equals(ServiceConstant.NON_ADMIN)) {
             throw new AuthorizationFailedException("ATHR-003", "Unauthorized Access, Entered user is not an admin");
         }
-        if(ZonedDateTime.now().isAfter(userAuthEntity.getExpiresAt())){
+
+        if (userAuthEntity.getLogoutAt() == null) {
+            return;
+        }
+        LocalDateTime logoutTime = userAuthEntity.getLogoutAt().toLocalDateTime();
+        LocalDateTime currentTime = LocalDateTime.now();
+
+        if (currentTime.isAfter(logoutTime)) {
             throw new AuthorizationFailedException("ATHR-003", "User is signed out");
         }
         userDao.userDelete(user);
